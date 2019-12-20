@@ -1,21 +1,17 @@
 const model = require('../models')
 
 const parseCookies = (req, res, next) => {
-  if(req.headers.cookie){
-    let parsedCookie = {};
-    console.log(req.headers.cookie)
-    console.log(req)
-    req.headers.cookie.split(' ').forEach(cookie => {
-      let splited = cookie.split('=');
-      parsedCookie[splited[0]] = splited[1];
-    });
-    req.cookies = parsedCookie;
+  var cookieObj = {};
 
-    // res.cookies = parsedCookie;
-    next(req, res);
-  } else {
-    res.status(401).send();
+  if (req.headers.cookie) {
+    var cookies = req.headers.cookie.split('; ');
+    cookies.forEach(cookie => {
+      var arr = cookie.split('=');
+      cookieObj[arr[0]] = arr[1];
+    })
   }
+  req.cookies = cookieObj;
+  next();
 };
 
 module.exports = parseCookies;
